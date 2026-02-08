@@ -1,20 +1,34 @@
-name: Sync Fork
+name: Sync Fork with Upstream
 
 on:
-  # 两种触发方式：定时任务和手动触发
+  # 触发器1：计划任务（推荐）
   schedule:
-    - cron: '*/30 * * * *' # 每30分钟自动运行一次，可调整
-  workflow_dispatch: # 允许在Actions页面手动点击运行
+    # 每隔30分钟运行一次。语法为cron，可自行调整。
+    # 格式：分钟 小时 天 月 星期
+    - cron: '*/30 * * * *'
+  # 触发器2：手动触发（在GitHub网页点击按钮运行）
+  workflow_dispatch:
+  # 触发器3（可选）：当上游仓库发布新版本时触发（需你有推送权限）
+  # release:
+  #   types: [published]
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
+      # 步骤1：使用现成的同步Action
       - name: Sync upstream changes
         uses: github-actions/update-fork@v1
         with:
-          upstream: DrakiaXYZ/SPT-LiveFleaPriceDB # 例如：octocat/Hello-World
-          upstream-branch: main # 上游仓库的分支名
-          target-branch: main # 你要更新的Fork仓库分支名
+          # 关键配置：原始仓库（上游）的地址，格式为：所有者/仓库名
+          upstream: DrakiaXYZ/SPT-LiveFleaPriceDB
+          # 上游仓库要同步的分支（通常是 main 或 master）
+          upstream-branch: main
+          # 你的Fork仓库要更新的目标分支（必须与上游分支名相同）
+          target-branch: main
+          # 合并策略，默认为 'hardreset'，会强制让你的分支与上游一致（干净但会覆盖）
+          # 另一种常用模式是 'merge'，会创建合并提交。根据喜好选择。
+          merge-method: merge
         env:
+          # 使用GitHub自动生成的令牌，拥有对当前仓库的读写权限
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
