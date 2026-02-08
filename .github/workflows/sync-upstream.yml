@@ -1,0 +1,20 @@
+name: Sync Fork
+
+on:
+  # 两种触发方式：定时任务和手动触发
+  schedule:
+    - cron: '*/30 * * * *' # 每30分钟自动运行一次，可调整
+  workflow_dispatch: # 允许在Actions页面手动点击运行
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sync upstream changes
+        uses: github-actions/update-fork@v1
+        with:
+          upstream: DrakiaXYZ/SPT-LiveFleaPriceDB # 例如：octocat/Hello-World
+          upstream-branch: main # 上游仓库的分支名
+          target-branch: main # 你要更新的Fork仓库分支名
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
