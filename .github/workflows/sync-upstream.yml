@@ -28,7 +28,7 @@ jobs:
           target-branch: main
           # 合并策略，默认为 'hardreset'，会强制让你的分支与上游一致（干净但会覆盖）
           # 另一种常用模式是 'merge'，会创建合并提交。根据喜好选择。
-          merge-method: merge
+          merge-method: hardreset
         env:
           # 使用GitHub自动生成的令牌，拥有对当前仓库的读写权限
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
